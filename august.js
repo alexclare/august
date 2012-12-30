@@ -23,12 +23,12 @@ function login(input) {
 if (Meteor.isClient) {
   Template.login.events({
     'click .btn': function(event) {
-        login(this.username.value);
+      login(this.username.value);
     },
     'keyup #username, keyup #password': function(event) {
-        if (event.which === 13) {
-            login(this.username.value);
-        }
+      if (event.which === 13) {
+        login(this.username.value);
+      }
     }
   });
 
@@ -45,13 +45,13 @@ if (Meteor.isClient) {
       return Session.get('username');
     },
     'thread': function() {
-        return Session.get('thread');
+      return Session.get('thread');
     }
-    }, function(k, v) { Handlebars.registerHelper(v, k); });
+  }, function(k, v) { Handlebars.registerHelper(v, k); });
 }
 
 if (Meteor.isServer) {
   Meteor.startup(function () {
-          // pass
+    // pass
   });
 }
