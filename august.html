@@ -28,7 +28,7 @@
         <a class="brand" href="#">Eternal August</a>
         {{#if thread}}
           <ul class="nav">
-            <li class="active"><a href="#">Insert thread title here, quicumque</a></li>
+            <li class="active"><a href="#">{{thread}}</a></li>
           </ul>
         {{/if}}
         {{#if user}}
@@ -96,8 +96,8 @@
         </thead>
         <tbody>
           <tr><td>2013-01-07 14:00</td><td>Good placeholder for display</td></tr>
-          {{#each thread}}
-            <tr><td>2013-01-07 14:00</td><td>Another "insert thread title here" bit</td></tr>
+          {{#each threads}}
+            <tr><td>{{timestring}}</td><td><a href="#" class="thread">{{topic}}</a></td></tr>
           {{/each}}
         </tbody>
       </table>
