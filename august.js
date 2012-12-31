@@ -49,6 +49,9 @@ if (Meteor.isClient) {
     'click .brand': function(event) {
       Session.set('thread', '')
     },
+    'click #forum': function(event) {
+      Session.set('thread', '');
+    },
     'click #logout': function(event) {
       Session.set('username', '');
     }
