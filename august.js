@@ -24,10 +24,17 @@ function startThread(input) {
   if (topic) {
     if (!Threads.findOne({topic:topic})) {
       var now = new Date(Date.now());
-      // TODO Use lib/underscore.string.sprintf
-      Threads.insert({topic:topic,
-                      timestamp:now,
-                      timestring:now.toUTCString()});
+      var month = String(now.getMonth());
+      if (month < 10) month = "0" + month;
+      var day = String(now.getDate());
+      if (day < 10) day = "0" + day;
+      var hours = String(now.getHours());
+      if (hours < 10) hours = "0" + hours;
+      Threads.insert({topic: topic,
+                      timestamp: now,
+                      timestring: (String(now.getFullYear()) + "-" + month +
+                                   "-" + day + " " + hours + ":" +
+                                   String(now.getMinutes()))});
     }
     Session.set('thread', topic);
   }
