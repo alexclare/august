@@ -30,13 +30,13 @@ function startThread(input) {
       if (day < 10) day = "0" + day;
       var hours = String(now.getHours());
       if (hours < 10) hours = "0" + hours;
-      Threads.insert({username: Session.get('username'),
-                      topic: topic,
-                      timestamp: now,
-                      timestring: (String(now.getFullYear()) + "-" + month +
-                                   "-" + day + " " + hours + ":" +
-                                   String(now.getMinutes())),
-                      posts: [topic]});
+      var username = Session.get('username');
+      var timestring = String(now.getFullYear()) + "-" + month +
+        "-" + day + " " + hours + ":" + String(now.getMinutes());
+      Threads.insert({username: username, topic: topic, timestamp: now,
+                      timestring: timestring,
+                      posts: [{username: username, time: timestring,
+                               text: topic, toppost: 1}]});
     }
     Session.set('thread', topic);
   }
@@ -85,6 +85,15 @@ if (Meteor.isClient) {
       return Threads.find(
         {}, {fields:{topic:1, timestring:1},
              sort:{timestamp: -1}});
+    }
+  });
+
+  Template.thread.helpers({
+    'posts': function() {
+      var ps = Threads.findOne({topic: Session.get('thread')},
+                          {posts:1});
+      if (ps) return ps.posts;
+      return null;
     }
   });
 

@@ -119,7 +119,7 @@
   {{#each posts}}
     <div class="row">
       <div class="span2">
-        <p><strong>User 1</strong><br>2012-10-11 9:35</p>
+        <p><strong>{{this.username}}</strong><br>{{this.time}}</p>
       </div>
       <div class="span10">
         {{#if toppost}}
@@ -127,7 +127,7 @@
         {{else}}
         <p>
         {{/if}}
-        Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula. Yep, more place-holding.
+          {{text}}
         </p>
       </div>
     </div>
