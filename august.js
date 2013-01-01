@@ -22,7 +22,7 @@ function login(input) {
 function startThread(input) {
   var topic = String(input || '');
   if (topic) {
-    if (!Threads.findOne({topic:topic})) {
+    if (!Threads.findOne({topic: topic})) {
       var now = new Date(Date.now());
       var month = String(now.getMonth());
       if (month < 10) month = "0" + month;
@@ -30,11 +30,13 @@ function startThread(input) {
       if (day < 10) day = "0" + day;
       var hours = String(now.getHours());
       if (hours < 10) hours = "0" + hours;
-      Threads.insert({topic: topic,
+      Threads.insert({username: Session.get('username'),
+                      topic: topic,
                       timestamp: now,
                       timestring: (String(now.getFullYear()) + "-" + month +
                                    "-" + day + " " + hours + ":" +
-                                   String(now.getMinutes()))});
+                                   String(now.getMinutes())),
+                      posts: [topic]});
     }
     Session.set('thread', topic);
   }

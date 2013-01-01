@@ -85,12 +85,16 @@
     <div class="span12">
       <table class="table table-hover">
         <thead>
-          <tr><th class="span3">date</th><th>topic</th></tr>
-          <tr><th></th>
+          <tr>
+            <th class="span2">date</th>
+            <th class="span2">user</th>
+            <th>topic</th>
+          </tr>
+          <tr><th></th><th></th>
             <td>
               <form class="form-inline" style="margin-bottom: 0px">
                 <div class="input-append">
-                  <input type="text" id="topic" class="span9">
+                  <input type="text" id="topic" class="span8">
                   <span class="add-on"><a href="#">New Thread</a></span>
                 </div>
               </form>
@@ -98,9 +102,12 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td>2013-01-07 14:00</td><td>Good placeholder for display</td></tr>
+          <tr><td>2013-01-07 14:00</td><td>Nobody</td><td>Good placeholder for display</td></tr>
           {{#each threads}}
-            <tr><td>{{timestring}}</td><td><a href="#" class="thread">{{topic}}</a></td></tr>
+            <tr>
+              <td>{{timestring}}</td>
+              <td>{{username}}</td>
+              <td><a href="#" class="thread">{{topic}}</a></td></tr>
           {{/each}}
         </tbody>
       </table>
@@ -109,7 +116,7 @@
 </template>
 
 <template name="thread">
-  {{#each post}}
+  {{#each posts}}
     <div class="row">
       <div class="span2">
         <p><strong>User 1</strong><br>2012-10-11 9:35</p>
