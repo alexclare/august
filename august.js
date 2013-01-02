@@ -8,6 +8,18 @@
 Users = new Meteor.Collection('users');
 Threads = new Meteor.Collection('threads');
 
+function pad(num) {
+  if (num < 10)
+    return '0' + num;
+  return String(num);
+};
+
+function toTimeString(date) {
+  return String(date.getFullYear()) + '-' + pad(date.getMonth()+1) + '-' +
+    pad(date.getDate()) + ' ' + pad(date.getHours()) + ':' +
+    pad(date.getMinutes());
+}
+
 function login(input) {
   var user = String(input || '');
   if (user) {
@@ -24,15 +36,8 @@ function startThread(input) {
   if (topic) {
     if (!Threads.findOne({topic: topic})) {
       var now = new Date(Date.now());
-      var month = String(now.getMonth());
-      if (month < 10) month = "0" + month;
-      var day = String(now.getDate());
-      if (day < 10) day = "0" + day;
-      var hours = String(now.getHours());
-      if (hours < 10) hours = "0" + hours;
       var username = Session.get('username');
-      var timestring = String(now.getFullYear()) + "-" + month +
-        "-" + day + " " + hours + ":" + String(now.getMinutes());
+      var timestring = toTimeString(now);
       Threads.insert({username: username, topic: topic, timestamp: now,
                       timestring: timestring,
                       posts: [{username: username, time: timestring,
