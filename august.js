@@ -78,6 +78,7 @@ if (Meteor.isClient) {
     },
     'click #logout': function(event) {
       Session.set('username', '');
+      Session.set('thread', '');
     }
   });
 
