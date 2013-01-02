@@ -47,6 +47,16 @@ function startThread(input) {
   }
 }
 
+function postReply(input) {
+  var text = String(input || '');
+  var now = new Date(Date.now());
+  var timeString = toTimeString(now);
+  Threads.update({topic: Session.get('thread')},
+                 {$set: {timestamp: now, timestring: timeString},
+                  $push: {posts: {username: Session.get('username'),
+                                  time: timeString, text: input}}});
+}
+
 if (Meteor.isClient) {
   Template.login.events({
     'click .btn': function(event) {
@@ -82,6 +92,12 @@ if (Meteor.isClient) {
       if (event.which === 13) {
         startThread(this.topic.value)
       };
+    }
+  });
+
+  Template.thread.events({
+    'click .btn': function(event) {
+      postReply(this.post.value);
     }
   });
 
