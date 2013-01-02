@@ -8,6 +8,8 @@
 Users = new Meteor.Collection('users');
 Threads = new Meteor.Collection('threads');
 
+var day = 86400000;
+
 function pad(num) {
   if (num < 10)
     return '0' + num;
@@ -91,7 +93,7 @@ if (Meteor.isClient) {
     },
     'keyup #topic': function(event) {
       if (event.which === 13) {
-        startThread(this.topic.value)
+        startThread(this.topic.value);
       };
     }
   });
@@ -132,6 +134,27 @@ if (Meteor.isClient) {
 
 if (Meteor.isServer) {
   Meteor.startup(function () {
-    // pass
+    Users.remove({});
+    Threads.remove({});
+    var users = [{username: "Early Adopter", timestamp: new Date(2012, 6, 1).getTime()},
+                 {username: "A Month Later", timestamp: new Date(2012, 7, 1).getTime()},
+                 {username: "Three Months Later", timestamp: new Date(2012, 9, 1).getTime()},
+                 {username: "Fad Time", timestamp: new Date(2012, 11, 1).getTime()}];
+    var dates = [new Date(2012, 6, 1), new Date(2012, 7, 30),
+                 new Date(2012, 8, 1), new Date(2012, 9, 30),
+                 new Date(2012, 12, 12)];
+    var threads = [{username: users[0]['username'], text: "Welcome", time: dates[0]},
+                    {username: users[0]['username'], text: "I'm back", time: dates[3]},
+                    {username: users[3]['username'], text: "Hey guys", time: dates[3]},
+                    {username: users[3]['username'], text: "This sucks", time: dates[4]}];
+
+    _.map(users, function(user) { Users.insert(user); });
+    _.map(threads, function(thread) { Threads.insert(
+      {username: thread.username, topic: thread.text,
+       timestamp: thread.time.getTime(), timestring: toTimeString(thread.time),
+       posts: [{username: thread.username, text: thread.text,
+                time: toTimeString(thread.time), toppost: 1}]})});
+    Session.set('username', '');
+    Session.set('thread', '');
   });
 }
