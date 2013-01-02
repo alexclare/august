@@ -38,7 +38,7 @@ function startThread(input) {
       var now = new Date(Date.now());
       var username = Session.get('username');
       var timestring = toTimeString(now);
-      Threads.insert({username: username, topic: topic, timestamp: now,
+      Threads.insert({username: username, topic: topic, timestamp: now.getTime(),
                       timestring: timestring,
                       posts: [{username: username, time: timestring,
                                text: topic, toppost: 1}]});
@@ -52,7 +52,7 @@ function postReply(input) {
   var now = new Date(Date.now());
   var timeString = toTimeString(now);
   Threads.update({topic: Session.get('thread')},
-                 {$set: {timestamp: now, timestring: timeString},
+                 {$set: {timestamp: now.getTime(), timestring: timeString},
                   $push: {posts: {username: Session.get('username'),
                                   time: timeString, text: input}}});
 }
