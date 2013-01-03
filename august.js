@@ -38,11 +38,12 @@ function startThread(input) {
   if (topic) {
     if (!Threads.findOne({topic: topic})) {
       var now = new Date(Date.now());
-      var username = Session.get('username');
+      var user = Users.findOne({username: Session.get('username')});
       var timestring = toTimeString(now);
-      Threads.insert({username: username, topic: topic, timestamp: now.getTime(),
+      Threads.insert({username: user['username'], userstamp: user['timestamp'],
+                      topic: topic, timestamp: now.getTime(),
                       timestring: timestring,
-                      posts: [{username: username, time: timestring,
+                      posts: [{username: user['username'], time: timestring,
                                text: topic, toppost: 1}]});
     }
     Session.set('thread', topic);
@@ -106,9 +107,16 @@ if (Meteor.isClient) {
 
   Template.forum.helpers({
     'threads': function() {
-      return Threads.find(
-        {}, {fields:{topic:1, timestring:1},
-             sort:{timestamp: -1}});
+      var user = Users.findOne({username: Session.get('username')},
+                             {timestamp: 1});
+      if (user) {
+        join = new Date(user.timestamp).getTime();
+        return Threads.find(
+          {userstamp: {$lte: new Date(join + 40*day).getTime(),
+                       $gte: new Date(join - 40*day).getTime()}},
+          {fields:{topic:1, timestring:1}, sort:{timestamp: -1}});
+      };
+      return null;
     }
   });
 
@@ -143,14 +151,16 @@ if (Meteor.isServer) {
     var dates = [new Date(2012, 6, 1), new Date(2012, 7, 30),
                  new Date(2012, 8, 1), new Date(2012, 9, 30),
                  new Date(2012, 12, 12)];
-    var threads = [{username: users[0]['username'], text: "Welcome", time: dates[0]},
-                    {username: users[0]['username'], text: "I'm back", time: dates[3]},
-                    {username: users[3]['username'], text: "Hey guys", time: dates[3]},
-                    {username: users[3]['username'], text: "This sucks", time: dates[4]}];
+    var threads = [{user: users[0], text: "Welcome", time: dates[0]},
+                    {user: users[0], text: "I'm back", time: dates[3]},
+                    {user: users[3], text: "Hey guys", time: dates[3]},
+                    {user: users[3], text: "This sucks", time: dates[4]}];
 
     _.map(users, function(user) { Users.insert(user); });
     _.map(threads, function(thread) { Threads.insert(
-      {username: thread.username, topic: thread.text,
+      {username: thread['user']['username'],
+       userstamp: thread['user']['timestamp'],
+       topic: thread.text,
        timestamp: thread.time.getTime(), timestring: toTimeString(thread.time),
        posts: [{username: thread.username, text: thread.text,
                 time: toTimeString(thread.time), toppost: 1}]})});
